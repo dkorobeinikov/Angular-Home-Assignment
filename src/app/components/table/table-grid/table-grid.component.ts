@@ -77,6 +77,12 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
             column.sortBy = "desc";
         }
 
+        this.columnDefinitions.forEach(columnDefinition => {
+            if (columnDefinition.property !== column.property) {
+                columnDefinition.sortBy = "none";
+            }
+        });
+
         this.sortChange.emit({
             columnName: column.property,
             direction: column.sortBy === "asc" ? Direction.Ascending : Direction.Descending,
