@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Direction, ISortChangeEventArgs } from "../components/table/table-grid/table-grid.component";
+import { sortBy } from "../helpers/data-helper";
 import { CubeSolvesResultsService, ICubeSolveResult } from "../services/cube-solves-results.service";
 
 @Component({
@@ -30,13 +31,6 @@ export class TableGridPage implements OnInit {
     }
 
     public onSortChange(args: ISortChangeEventArgs<ICubeSolveResult>): void {
-        this.solves.sort((solve1, solve2) =>
-            this._sorter(solve1[args.columnName], solve2[args.columnName]) * (args.direction === Direction.Ascending ? 1 : -1)
-        );
+        this.solves = sortBy(this.solves, args.columnName, args.direction === Direction.Ascending ? "asc" : "desc");
     }
-
-    private _sorter<T>(a: T, b: T): number {
-        return a > b ? 1 : (a < b ? -1 : 0);
-    }
-
 }

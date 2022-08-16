@@ -2,8 +2,12 @@
     <h2>Table View</h2>
     <div class="grid">
         <t-grid [data]="solves"
+            [pageSize]="40"
             (sortChange)="onSortChange($event)"
         >
+            <t-column [name]="'No'"
+                [property]="'no'"
+                [sortable]="true"></t-column>
             <t-column [name]="'Time'"
                 [property]="'time'"
                 [sortable]="true"></t-column>

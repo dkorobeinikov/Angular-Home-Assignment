@@ -18,7 +18,7 @@ export class CsvLoaderService {
 
         return {
             columns: header.split(","),
-            records: records.map(record => record.split(",")),
+            records: records.filter(record => !!record).map(record => record.split(",")),
         };
 
     }

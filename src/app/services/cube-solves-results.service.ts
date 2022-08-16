@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { CsvLoaderService } from "./csv-loader.service";
 
 export interface ICubeSolveResult {
-    no: string;
+    no: number;
     time: number;
     comment: string;
     scramble: string;
@@ -35,8 +35,11 @@ export class CubeSolvesResultsService {
 
 
         for (const record of records) {
+            if (record[timeIndex].startsWith("DNF")) {
+                continue;
+            }
             solves.push({
-                no: record[noIndex],
+                no: parseInt(record[noIndex]),
                 comment: record[commentIndex] ?? "",
                 date: new Date(record[dateIndex]) ?? null,
                 scramble: record[scrambleIndex] ?? "",

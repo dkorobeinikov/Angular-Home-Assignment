@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody class="grid-content">
-        <tr class="content-row" *ngFor="let item of data">
+        <tr class="content-row" *ngFor="let item of getRecords()">
             <td class="content-column"
                 *ngFor="let column of columnDefinitions">
                 {{ item[column.property] }}
