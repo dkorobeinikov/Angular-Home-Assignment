@@ -1,7 +1,9 @@
 <div class="container">
     <h2>Table View</h2>
     <div class="grid">
-        <t-grid [data]="solves">
+        <t-grid [data]="solves"
+            (sortChange)="onSortChange($event)"
+        >
             <t-column [name]="'Time'"
                 [property]="'time'"
                 [sortable]="true"></t-column>

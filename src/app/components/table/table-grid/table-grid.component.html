@@ -2,12 +2,19 @@
 <table class="grid">
     <thead class="grid-header">
         <tr class="header-row">
-            <th class="header-column" *ngFor="let column of columnDefinitions">{{ column.name }}</th>
+            <th class="header-column"
+                *ngFor="let column of columnDefinitions"
+                [ngClass]="getHeaderClasses(column)"
+                (click)="handleHeaderColumnClick($event, column)"
+            >
+                {{ column.name }}
+            </th>
         </tr>
     </thead>
     <tbody class="grid-content">
         <tr class="content-row" *ngFor="let item of data">
-            <td class="content-column" *ngFor="let column of columnDefinitions">
+            <td class="content-column"
+                *ngFor="let column of columnDefinitions">
                 {{ item[column.property] }}
             </td>
         </tr>
