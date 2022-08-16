@@ -1,14 +1,32 @@
 .grid {
     position: relative;
-    border-radius: 3px;
+    border-collapse: collapse;
+    width: 100%;
 }
 
 .header-row {
-    position: sticky;
     background-color: #6c7ae0;
+    color: white;
+    /* Stick to the top */
+    position: sticky;
+    top: 0;
+
+    /* Displayed on top of other rows when scrolling */
+    z-index: 9999;
 }
 
 .header-column,
 .content-column {
-    padding: 12px 8px;
+    text-align: left;
+    padding: 16px 24px;
+}
+
+.header-column:first-child,
+.content-column:first-child {
+    width: 20%;
+    padding-left: 32px;
+}
+
+.content-row:nth-child(even) {
+    background-color: #f8f6ff;
 }

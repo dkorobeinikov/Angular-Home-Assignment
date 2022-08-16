@@ -1,11 +1,13 @@
 <div class="container">
     <h2>Table View</h2>
-    <t-grid [data]="solves">
-        <t-column [name]="'Time'"
-            [property]="'time'"
-            [sortable]="true"></t-column>
-        <t-column [name]="'Scramble'"
-            [property]="'scramble'"
-            [sortable]="false"></t-column>
-    </t-grid>
+    <div class="grid">
+        <t-grid [data]="solves">
+            <t-column [name]="'Time'"
+                [property]="'time'"
+                [sortable]="true"></t-column>
+            <t-column [name]="'Scramble'"
+                [property]="'scramble'"
+                [sortable]="false"></t-column>
+        </t-grid>
+    </div>
 </div>
