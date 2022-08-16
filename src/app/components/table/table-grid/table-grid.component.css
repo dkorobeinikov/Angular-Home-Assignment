@@ -1,0 +1,14 @@
+.grid {
+    position: relative;
+    border-radius: 3px;
+}
+
+.header-row {
+    position: sticky;
+    background-color: #6c7ae0;
+}
+
+.header-column,
+.content-column {
+    padding: 12px 8px;
+}
