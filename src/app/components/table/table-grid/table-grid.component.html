@@ -3,9 +3,11 @@
     <div class="table-wrapper">
         <t-table-view [data]="getRecords()" [columnDefinitions]="columnDefinitions"></t-table-view>
     </div>
-    <t-paginator
-        [total]="totalRecords"
-        [currentPage]="currentPage"
-        [pageSize]="pageSize"
-    ></t-paginator>
+    <div class="table-paginator">
+        <t-paginator
+            [total]="totalRecords"
+            [currentPage]="currentPage"
+            [pageSize]="pageSize"
+        ></t-paginator>
+    </div>
 </div>

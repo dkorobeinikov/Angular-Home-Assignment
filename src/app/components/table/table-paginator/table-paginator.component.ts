@@ -3,6 +3,9 @@ import { Component, Input } from "@angular/core";
 @Component({
     selector: "t-paginator",
     templateUrl: "./table-paginator.component.html",
+    styleUrls: [
+        "./table-paginator.component.css"
+    ],
 })
 export class TablePaginator {
 
@@ -58,6 +61,18 @@ export class TablePaginator {
         }
 
         return result;
+
+    }
+
+    public handleClickPrevious($event: MouseEvent) {
+
+    }
+
+    public handleClickNext($event: MouseEvent) {
+
+    }
+
+    public handleClickPage($event: MouseEvent, num: number) {
 
     }
 

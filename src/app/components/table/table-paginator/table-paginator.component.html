@@ -1,9 +1,20 @@
-<div class="table-paginator">
-    <button class="table-paginator-button" [ngClass]="{disabled: hasPreviousPage}">Previous</button>
-    <div class="page-number"
-        *ngFor="let num of getPageRanges()">
-        <div class="number" *ngIf="num | isNotNaN">{{num}}</div>
-        <div class="ellipsis" *ngIf="num | isNaN">...</div>
-    </div>
-    <button class="table-paginator-button" [ngClass]="{disabled: hasNextPage}">Next</button>
-</div>
+<ul class="page-numbers">
+    <li class="table-paginator-button"
+        [ngClass]="{disabled: hasPreviousPage}"
+        (click)="handleClickPrevious($event)">
+        Previous
+    </li>
+    <li
+        class="table-paginator-button"
+        *ngFor="let num of getPageRanges()"
+        [ngClass]="{'page-number': num | isNotNaN, ellipsis: num | isNaN, active: num === currentPage }"
+        (click)="handleClickPage($event, num)"
+    >
+        {{(num | isNotNaN) ? num : "..."}}
+    </li>
+    <li class="table-paginator-button"
+        [ngClass]="{disabled: hasNextPage}"
+        (click)="handleClickNext($event)">
+        Next
+    </li>
+</ul>

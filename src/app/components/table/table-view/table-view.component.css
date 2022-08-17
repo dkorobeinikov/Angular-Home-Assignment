@@ -29,6 +29,7 @@
 
 .header-column {
     position: relative;
+    transition: background-color 0.3s;
 }
 
 .header-column.sortable:hover {

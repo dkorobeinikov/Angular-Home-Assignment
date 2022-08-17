@@ -1,0 +1,35 @@
+.page-numbers {
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.table-paginator-button {
+    font-size: .9em;
+    display: flex;
+    padding: 8px 12px;
+    list-style: none;
+
+    transition: background-color 0.3s;
+    border-radius: 3px;
+    margin-left: 8px;
+}
+
+.table-paginator-button:hover {
+    cursor: pointer;
+    background-color: #f8f6ff;
+}
+
+.table-paginator-button.active {
+    background-color: #6c7ae0;
+    color: white;
+    box-shadow: 0 0 5px -2px #aaa;
+}
+
+.table-paginator-button.active:hover {
+    background-color: #4856b7;
+}
+
+.ellipsis {
+    pointer-events: none;
+}

@@ -7,4 +7,10 @@
 
 .table-wrapper {
     overflow: auto;
+    border-radius: 5px;
+    box-shadow: 0 0 16px -4px #999;
+}
+
+.table-paginator {
+    margin: 16px auto;
 }
