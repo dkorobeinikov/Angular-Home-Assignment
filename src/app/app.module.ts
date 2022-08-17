@@ -16,6 +16,7 @@ import { TableViewComponent } from './components/table/table-view/table-view.com
 import { ProgressIndicatorPage } from './pages/progress-indicator.page';
 import { TableGridPage } from './pages/table-grid.page';
 import { CsvLoaderService } from './services/csv-loader.service';
+import { CubeSolvesResultsObservableService } from './services/cube-solves-results-observable.service';
 import { CubeSolvesResultsService } from './services/cube-solves-results.service';
 
 @NgModule({
@@ -40,6 +41,7 @@ import { CubeSolvesResultsService } from './services/cube-solves-results.service
     providers: [
         CsvLoaderService,
         CubeSolvesResultsService,
+        CubeSolvesResultsObservableService,
     ],
     bootstrap: [AppComponent]
 })

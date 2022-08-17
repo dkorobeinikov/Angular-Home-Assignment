@@ -1,4 +1,5 @@
 import { Component, Input, QueryList, AfterViewInit, ContentChildren, Output, EventEmitter, OnChanges, SimpleChanges } from "@angular/core";
+import { isObservable, Observable } from "rxjs";
 import { getPage, sortBy } from "src/app/helpers/data-helper";
 import { IColumnDefinition, TableColumnComponent } from "./table-column.directive";
 
@@ -26,7 +27,9 @@ export type PaginationStrategy = "controlled" | "uncontrolled";
 })
 export class TableGridComponent<T> implements AfterViewInit, OnChanges {
     @Input()
-    public data: T[] = [];
+    public data: T[] | Observable<T[]> = [];
+
+    private _data: T[] = [];
     public visibleData: T[] = [];
 
     @Input()
@@ -61,7 +64,7 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges {
 
     public get totalRecords(): number {
         if (this.total === null) {
-            return this.data.length;
+            return this._data.length;
         }
 
         return this.total;
@@ -80,7 +83,16 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges {
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes["data"] && changes["data"].previousValue !== changes["data"].currentValue) {
-            this._updateVisibleData();
+            if (isObservable(this.data)) {
+                this.data.subscribe((data) => {
+                    this._data = [...data];
+                    this._updateVisibleData()
+                });
+            }
+            else {
+                this._data = [...this.data];
+                this._updateVisibleData();
+            }
         }
     }
 
@@ -97,10 +109,10 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges {
     private getRecords() {
 
         if (this.paginationStrategy === "controlled" || this.pageSize === null) {
-            return this.data;
+            return this._data;
         }
 
-        let sortedRecords = [...this.data];
+        let sortedRecords = [...this._data];
         const sortedByProperty = this.columnDefinitions.find(cd => cd.sortBy === "asc" || cd.sortBy === "desc");
         if (sortedByProperty) {
             sortedRecords = sortBy(sortedRecords, sortedByProperty.property, sortedByProperty.sortBy === "asc" ? "asc" : "desc");
