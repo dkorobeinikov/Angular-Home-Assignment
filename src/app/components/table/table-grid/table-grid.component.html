@@ -1,22 +1,11 @@
 <ng-content></ng-content>
-<table class="grid">
-    <thead class="grid-header">
-        <tr class="header-row">
-            <th class="header-column"
-                *ngFor="let column of columnDefinitions"
-                [ngClass]="getHeaderClasses(column)"
-                (click)="handleHeaderColumnClick($event, column)"
-            >
-                {{ column.name }}
-            </th>
-        </tr>
-    </thead>
-    <tbody class="grid-content">
-        <tr class="content-row" *ngFor="let item of getRecords()">
-            <td class="content-column"
-                *ngFor="let column of columnDefinitions">
-                {{ item[column.property] }}
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div class="grid">
+    <div class="table-wrapper">
+        <t-table-view [data]="getRecords()" [columnDefinitions]="columnDefinitions"></t-table-view>
+    </div>
+    <t-paginator
+        [total]="totalRecords"
+        [currentPage]="currentPage"
+        [pageSize]="pageSize"
+    ></t-paginator>
+</div>

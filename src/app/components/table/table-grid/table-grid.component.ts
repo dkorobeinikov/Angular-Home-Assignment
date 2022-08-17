@@ -61,18 +61,6 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
         return this.total;
     }
 
-    public get totalPages(): number {
-        if (this.pageSize === null) {
-            return 1;
-        }
-
-        return Math.ceil(this.totalRecords / this.pageSize);
-    }
-
-    public get hasNextPage(): boolean {
-        return this.totalPages > this.currentPage;
-    }
-
     public constructor() {
 
     }

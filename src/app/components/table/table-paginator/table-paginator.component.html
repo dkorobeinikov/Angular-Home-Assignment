@@ -1,0 +1,9 @@
+<div class="table-paginator">
+    <button class="table-paginator-button" [ngClass]="{disabled: hasPreviousPage}">Previous</button>
+    <div class="page-number"
+        *ngFor="let num of getPageRanges()">
+        <div class="number" *ngIf="num | isNotNaN">{{num}}</div>
+        <div class="ellipsis" *ngIf="num | isNaN">...</div>
+    </div>
+    <button class="table-paginator-button" [ngClass]="{disabled: hasNextPage}">Next</button>
+</div>

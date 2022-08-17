@@ -9,7 +9,6 @@ import { CubeSolvesResultsService, ICubeSolveResult } from "../services/cube-sol
         `
             .grid {
                 border-radius: 3px;
-                overflow: auto;
                 width: 700px;
                 height: 500px;
             }
