@@ -1,4 +1,4 @@
-import { Component, Input, QueryList, AfterViewInit, AfterContentChecked, ContentChildren, Output, EventEmitter } from "@angular/core";
+import { Component, Input, QueryList, AfterViewInit, ContentChildren, Output, EventEmitter, OnChanges, SimpleChanges } from "@angular/core";
 import { getPage, sortBy } from "src/app/helpers/data-helper";
 import { IColumnDefinition, TableColumnComponent } from "./table-column.directive";
 
@@ -24,9 +24,10 @@ export type PaginationStrategy = "controlled" | "uncontrolled";
     templateUrl: "./table-grid.component.html",
     styleUrls: ["./table-grid.component.css"],
 })
-export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked {
+export class TableGridComponent<T> implements AfterViewInit, OnChanges {
     @Input()
     public data: T[] = [];
+    public visibleData: T[] = [];
 
     @Input()
     public sortable = true;
@@ -77,8 +78,10 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
         });
     }
 
-    public ngAfterContentChecked(): void {
-        // console.log(this.data);
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes["data"] && changes["data"].previousValue !== changes["data"].currentValue) {
+            this._updateVisibleData();
+        }
     }
 
     public refreshColumnDefinitions() {
@@ -91,7 +94,7 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
         }, 0);
     }
 
-    public getRecords() {
+    private getRecords() {
 
         if (this.paginationStrategy === "controlled" || this.pageSize === null) {
             return this.data;
@@ -105,6 +108,10 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
 
         return getPage(sortedRecords, this.pageSize, this.currentPage);
 
+    }
+
+    private _updateVisibleData() {
+        this.visibleData = this.getRecords();
     }
 
     public getHeaderClasses(column: IColumnDefinition<T>) {
@@ -124,6 +131,7 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
 
         this._setColumnsSortBy(column);
 
+        this._updateVisibleData();
         this.sortChange.emit({
             columnName: column.property,
             direction: column.sortBy === "asc" ? Direction.Ascending : Direction.Descending,
@@ -134,6 +142,7 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
         if (this.paginationStrategy === "uncontrolled") {
             this.currentPage = pageNumber;
         }
+        this._updateVisibleData();
         this.paginationChange.emit({ currentPage: pageNumber, pageSize: this.pageSize });
     }
 
