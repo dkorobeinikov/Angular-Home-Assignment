@@ -117,7 +117,7 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
 
     }
 
-    public handleHeaderColumnClick(event: MouseEvent, column: IColumnDefinition<T>) {
+    public handleHeaderColumnClick(column: IColumnDefinition<T>) {
         if (column.sortBy === "disabled") {
             return;
         }

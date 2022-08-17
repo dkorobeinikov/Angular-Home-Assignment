@@ -3,7 +3,9 @@
     <div class="table-wrapper">
         <t-table-view
             [data]="getRecords()"
-            [columnDefinitions]="columnDefinitions">
+            [columnDefinitions]="columnDefinitions"
+            (columnHeaderClicked)="handleHeaderColumnClick($event)"
+        >
         </t-table-view>
     </div>
     <div class="table-paginator">
