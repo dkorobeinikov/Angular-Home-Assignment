@@ -1,5 +1,8 @@
 .page-numbers {
+    position: relative;
     display: flex;
+    justify-content: center;
+    width: 100%;
     padding: 0;
     margin: 0;
 }
@@ -15,6 +18,19 @@
     margin-left: 8px;
 }
 
+.table-paginator-button.prev,
+.table-paginator-button.next {
+    position: absolute;
+}
+
+.table-paginator-button.prev {
+    left: 0;
+}
+
+.table-paginator-button.next {
+    right: 0;
+}
+
 .table-paginator-button:hover {
     cursor: pointer;
     background-color: #f8f6ff;
@@ -28,6 +44,10 @@
 
 .table-paginator-button.active:hover {
     background-color: #4856b7;
+}
+
+.table-paginator-button.disabled {
+    opacity: 0.3;
 }
 
 .ellipsis {

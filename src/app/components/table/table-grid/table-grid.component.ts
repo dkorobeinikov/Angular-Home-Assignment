@@ -12,6 +12,11 @@ export interface ISortChangeEventArgs<T> {
     direction: Direction;
 }
 
+export interface IPaginationChangeEventArgs {
+    currentPage: number;
+    pageSize: number | null;
+}
+
 export type PaginationStrategy = "controlled" | "uncontrolled";
 
 @Component({
@@ -36,7 +41,7 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
     public sortChange = new EventEmitter<ISortChangeEventArgs<T>>();
 
     @Output()
-    public performFetch = new EventEmitter<ISortChangeEventArgs<T>>();
+    public paginationChange = new EventEmitter<IPaginationChangeEventArgs>();
 
 
     @ContentChildren(TableColumnComponent<T>)
@@ -73,7 +78,7 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
     }
 
     public ngAfterContentChecked(): void {
-        console.log(this.data);
+        // console.log(this.data);
     }
 
     public refreshColumnDefinitions() {
@@ -123,6 +128,13 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
             columnName: column.property,
             direction: column.sortBy === "asc" ? Direction.Ascending : Direction.Descending,
         });
+    }
+
+    public handleRequestPage(pageNumber: number) {
+        if (this.paginationStrategy === "uncontrolled") {
+            this.currentPage = pageNumber;
+        }
+        this.paginationChange.emit({ currentPage: pageNumber, pageSize: this.pageSize });
     }
 
     private _setColumnsSortBy(column: IColumnDefinition<T>) {

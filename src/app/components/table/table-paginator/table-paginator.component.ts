@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
     selector: "t-paginator",
@@ -18,6 +18,9 @@ export class TablePaginator {
     @Input()
     public currentPage: number = 1;
 
+    @Output()
+    public requestPage = new EventEmitter<number>();
+
     public get totalPages(): number {
         if (this.pageSize === null) {
             return 1;
@@ -31,7 +34,7 @@ export class TablePaginator {
     }
 
     public get hasPreviousPage(): boolean {
-        return this.currentPage === 0;
+        return this.currentPage > 1;
     }
 
     public getPageRanges(): number[] {
@@ -65,15 +68,27 @@ export class TablePaginator {
     }
 
     public handleClickPrevious($event: MouseEvent) {
-
+        if (!this.hasPreviousPage) {
+            return;
+        }
+        this.requestPage.emit(this.currentPage - 1);
     }
 
     public handleClickNext($event: MouseEvent) {
+        if (!this.hasNextPage) {
+            return;
+        }
 
+        this.requestPage.emit(this.currentPage + 1);
     }
 
     public handleClickPage($event: MouseEvent, num: number) {
+        let pageNumberToRequest = num;
+        if (num > this.totalPages || num < 1) {
+            pageNumberToRequest = 1;
+        }
 
+        this.requestPage.emit(pageNumberToRequest);
     }
 
 }

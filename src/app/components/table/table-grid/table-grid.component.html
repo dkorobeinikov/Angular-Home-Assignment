@@ -1,13 +1,17 @@
 <ng-content></ng-content>
 <div class="grid">
     <div class="table-wrapper">
-        <t-table-view [data]="getRecords()" [columnDefinitions]="columnDefinitions"></t-table-view>
+        <t-table-view
+            [data]="getRecords()"
+            [columnDefinitions]="columnDefinitions">
+        </t-table-view>
     </div>
     <div class="table-paginator">
         <t-paginator
             [total]="totalRecords"
             [currentPage]="currentPage"
             [pageSize]="pageSize"
+            (requestPage)="handleRequestPage($event)"
         ></t-paginator>
     </div>
 </div>
