@@ -86,7 +86,7 @@ export class TableGridComponent<T> implements AfterViewInit, AfterContentChecked
             this.columnDefinitions = this.columnViews.map(view => ({
                 name: view.name,
                 property: view.property,
-                sortBy: view.sortable ? "none" : "disabled",
+                sortBy: this.sortable && view.sortable ? "none" : "disabled",
             }))
         }, 0);
     }
