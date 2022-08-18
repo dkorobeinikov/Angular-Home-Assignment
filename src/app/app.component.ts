@@ -4,9 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   template: `
     <nav-bar></nav-bar>
-    <h1>
-        Home Assignment
-    </h1>
     <router-outlet></router-outlet>
   `,
 })

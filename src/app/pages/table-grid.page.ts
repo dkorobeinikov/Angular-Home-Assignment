@@ -9,7 +9,13 @@ import { CubeSolvesResultsService, ICubeSolveResult } from "../services/cube-sol
     templateUrl: "./table-grid.page.html",
     styles: [
         `
+            .container {
+                padding: 3rem;
+                text-align: center
+            }
+
             .grid {
+                margin: 4rem auto;
                 border-radius: 3px;
                 width: 700px;
                 height: 500px;

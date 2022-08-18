@@ -1,17 +1,22 @@
 <div class="container">
-    <h2>Progress Indicator</h2>
-    <form (submit)="startProgress($event)">
-        <label for="radius">Radius</label>
-        <input type="number" id="radius" name="radius" [(ngModel)]="radius" />
-        <br>
-        <label for="time">Radius</label>
-        <input type="number" id="time" name="time" [(ngModel)]="time" />
-        <br>
-        <button type="submit">Submit</button>
-    </form>
-    <div class="grid">
-        <t-progress [radius]="radius" [progress]="progress" color="#6c7ae0">
+    <h2 class="header">Progress Indicator</h2>
+    <div class="indicator-wrapper">
+        <t-progress
+            [color]="'#6c7ae0'"
+            [radius]="radius"
+            [progress]="progress"
+            (complete)="onComplete"
+        >
         </t-progress>
     </div>
-    <button class="stop" (click)="handleStop()" *ngIf="showStopButton">Stop</button>
+    <form class="form" (submit)="startProgress($event)">
+        <label for="radius" class="label">Radius</label>
+        <input type="number" id="radius" name="radius" class="input" [(ngModel)]="radius" />
+        <br>
+        <label for="time" class="label">Time</label>
+        <input type="number" id="time" name="time" class="input" [(ngModel)]="time" />
+        <br>
+        <button type="submit" class="submit button">Submit</button>
+        <button class="stop button" (click)="handleStop($event)" *ngIf="showStopButton">Stop</button>
+    </form>
 </div>

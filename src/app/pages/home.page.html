@@ -1,0 +1,21 @@
+<main class="container">
+    <h2 class="main-header">Demos</h2>
+    <section class="tasks">
+        <a class="card-link" [routerLink]="['./table-grid']">
+            <t-card
+                [title]="'Table Grid'"
+                [description]="'Demo of reusable table grid component displaying the Rubik\'s cube solving times'"
+                [backgroundImage]="'assets/table-grid.png'"
+            >
+            </t-card>
+        </a>
+        <a class="card-link" [routerLink]="['./progress-indicator']">
+            <t-card
+                [title]="'Progress Indicator'"
+                [description]="'Demo of reusable progress indicator'"
+                [backgroundImage]="'assets/progress-indicator.png'"
+            >
+            </t-card>
+        </a>
+    </section>
+</main>

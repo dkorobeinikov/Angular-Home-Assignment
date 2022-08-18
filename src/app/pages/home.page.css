@@ -1,0 +1,17 @@
+.container {
+    padding: 3rem;
+}
+
+.main-header {
+    margin-bottom: 2rem;
+}
+
+.tasks {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+
+}
+.card-link {
+    text-decoration: none;
+}

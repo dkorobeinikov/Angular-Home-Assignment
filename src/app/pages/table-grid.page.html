@@ -2,8 +2,8 @@
     <h2>Table View</h2>
     <div class="grid">
         <t-grid [data]="solves"
-            [pageSize]="40"
-            (sortChange)="onSortChange($event)"
+            [sortable]="true"
+            [pageSize]="20"
         >
             <t-column [name]="'No'"
                 [property]="'no'"

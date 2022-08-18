@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
 
 @Component({
     selector: "t-progress",
@@ -35,7 +35,7 @@ import { Component, Input } from "@angular/core";
         `
     ],
 })
-export class ProgressIndicatorComponent {
+export class ProgressIndicatorComponent implements OnChanges {
     @Input()
     public radius = 16;
 
@@ -45,12 +45,26 @@ export class ProgressIndicatorComponent {
     @Input()
     public color = "green";
 
+    @Output()
+    public complete = new EventEmitter();
+
     public getStyles() {
         const angle = `${this.progress / 100 * 360 }`;
         return {
             "width": `${this.radius * 2}px`,
             "height": `${this.radius * 2}px`,
             "background-image": `conic-gradient(${this.color} 0 calc(${angle}deg),transparent  calc(${angle}deg) 360deg)`
+        }
+    }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (
+            changes["progress"] &&
+            changes["progress"].previousValue !== changes["progress"].currentValue &&
+            changes["progress"].previousValue < 100 &&
+            changes["progress"].currentValue === 100
+        ) {
+            this.complete.emit();
         }
     }
 

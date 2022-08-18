@@ -5,15 +5,12 @@ import { CubeSolvesResultsService, ICubeSolveResult } from "../services/cube-sol
 
 @Component({
     templateUrl: "./progress-indicator.page.html",
-    styles: [
-        `
-        `,
-    ]
+    styleUrls: ["./progress-indicator.component.css"]
 })
 export class ProgressIndicatorPage {
 
-    public progress = 0;
-    public radius = 16;
+    public progress = 70;
+    public radius = 32;
     public time = 1000;
 
     private _endTime = 0;
@@ -59,10 +56,16 @@ export class ProgressIndicatorPage {
     public stop() {
         if (this._animationFrame) {
             cancelAnimationFrame(this._animationFrame);
+            this._animationFrame = null;
         }
     }
 
-    public handleStop() {
+    public handleStop(event: MouseEvent) {
+        event.preventDefault();
+        this.stop();
+    }
+
+    public onComplete() {
         this.stop();
     }
 }
