@@ -27,7 +27,7 @@ export class TableGridPage implements OnInit {
     // public
     public solves!: Observable<ICubeSolveResult[]>;
     public total: number = 0;
-    public pageSize: number | null = null;
+    public pageSize: number | null = 50;
 
     private sortByProperty: keyof ICubeSolveResult | undefined = undefined;
     private sortByDirection: SortDirection | undefined = undefined;

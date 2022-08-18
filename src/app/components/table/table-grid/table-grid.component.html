@@ -11,6 +11,9 @@
                 <option value="100" [selected]="selectedPageSize === 100">100</option>
             </select>
         </div>
+        <div class="stats">
+            <p class="stats-message">Showing from <b>{{firstVisibleRecordNumber}}</b> to <b>{{lastVisibleRecordNumber}}</b> of {{totalRecords}} entries</p>
+        </div>
     </div>
     <div class="table-wrapper">
         <t-table-view

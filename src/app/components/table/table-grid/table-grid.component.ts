@@ -72,6 +72,21 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
         return this.total;
     }
 
+    public get firstVisibleRecordNumber(): number {
+        if (!this.selectedPageSize) {
+            return 1;
+        }
+        return this.selectedPageSize * (this.currentPage - 1) + 1;
+    }
+
+    public get lastVisibleRecordNumber(): number {
+        if (!this.selectedPageSize) {
+            return this.totalRecords;
+        }
+
+        return Math.min(this.totalRecords, this.firstVisibleRecordNumber - 1 + this.selectedPageSize);
+    }
+
     public constructor() {
 
     }
