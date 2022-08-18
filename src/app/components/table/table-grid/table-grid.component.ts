@@ -1,4 +1,4 @@
-import { Component, Input, QueryList, AfterViewInit, ContentChildren, Output, EventEmitter, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, Input, QueryList, AfterViewInit, ContentChildren, Output, EventEmitter, OnChanges, SimpleChanges, OnInit } from "@angular/core";
 import { isObservable, Observable } from "rxjs";
 import { getPage, sortBy } from "src/app/helpers/data-helper";
 import { IColumnDefinition, TableColumnComponent } from "./table-column.directive";
@@ -25,7 +25,7 @@ export type PaginationStrategy = "controlled" | "uncontrolled";
     templateUrl: "./table-grid.component.html",
     styleUrls: ["./table-grid.component.css"],
 })
-export class TableGridComponent<T> implements AfterViewInit, OnChanges {
+export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
     @Input()
     public data: T[] | Observable<T[]> = [];
 
@@ -52,6 +52,8 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges {
     public columnViews!: QueryList<TableColumnComponent<T>>;
     public columnDefinitions: IColumnDefinition<T>[] = [];
 
+    public selectedPageSize: number | null = null;
+
     public currentPage: number = 1;
 
     public get paginationStrategy(): PaginationStrategy {
@@ -72,6 +74,10 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges {
 
     public constructor() {
 
+    }
+
+    public ngOnInit() {
+        this.selectedPageSize = this.pageSize;
     }
 
     public ngAfterViewInit(): void {
@@ -108,7 +114,7 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges {
 
     private getRecords() {
 
-        if (this.paginationStrategy === "controlled" || this.pageSize === null) {
+        if (this.paginationStrategy === "controlled" || this.selectedPageSize === null) {
             return this._data;
         }
 
@@ -118,7 +124,7 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges {
             sortedRecords = sortBy(sortedRecords, sortedByProperty.property, sortedByProperty.sortBy === "asc" ? "asc" : "desc");
         }
 
-        return getPage(sortedRecords, this.pageSize, this.currentPage);
+        return getPage(sortedRecords, this.selectedPageSize, this.currentPage);
 
     }
 
@@ -154,7 +160,15 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges {
         this.currentPage = pageNumber;
 
         this._updateVisibleData();
-        this.paginationChange.emit({ currentPage: pageNumber, pageSize: this.pageSize });
+        this.paginationChange.emit({ currentPage: pageNumber, pageSize: this.selectedPageSize });
+    }
+
+    public handlePageSizeSelect(event: Event) {
+        const parsedInt = parseInt((event.target as any)?.value);
+        const value: number | null = isNaN(parsedInt) ? null : parsedInt;
+
+        this.selectedPageSize = value;
+        this._updateVisibleData();
     }
 
     private _setColumnsSortBy(column: IColumnDefinition<T>) {

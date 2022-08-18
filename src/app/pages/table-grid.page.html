@@ -3,8 +3,7 @@
     <div class="grid">
         <t-grid [data]="solves"
             [sortable]="true"
-            [pageSize]="pageSize"
-            [total]="total"
+            [pageSize]="20"
             (sortChange)="onSortChange($event)"
             (paginationChange)="onPaginationChange($event)"
         >

@@ -5,6 +5,19 @@
     max-height: 100%;
 }
 
+.options {
+    margin-bottom: 1rem;
+    display: flex;
+}
+
+.select {
+    justify-self: end;
+}
+
+.select label {
+    margin-right: 1rem;
+}
+
 .table-wrapper {
     overflow: auto;
     border-radius: 5px;

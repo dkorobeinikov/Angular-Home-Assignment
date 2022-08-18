@@ -1,5 +1,17 @@
 <ng-content></ng-content>
 <div class="grid">
+    <div class="options">
+        <div class="select">
+            <label for="pageSize">Page Size:</label>
+            <select name="pageSize" id="pageSize" (change)="handlePageSizeSelect($event)">
+                <option value="-1" [selected]="selectedPageSize === null">All</option>
+                <option value="10" [selected]="selectedPageSize === 10">10</option>
+                <option value="20" [selected]="selectedPageSize === 20">20</option>
+                <option value="50" [selected]="selectedPageSize === 50">50</option>
+                <option value="100" [selected]="selectedPageSize === 100">100</option>
+            </select>
+        </div>
+    </div>
     <div class="table-wrapper">
         <t-table-view
             [data]="visibleData"
@@ -12,7 +24,7 @@
         <t-paginator
             [total]="totalRecords"
             [currentPage]="currentPage"
-            [pageSize]="pageSize"
+            [pageSize]="selectedPageSize"
             (requestPage)="handleRequestPage($event)"
         ></t-paginator>
     </div>
