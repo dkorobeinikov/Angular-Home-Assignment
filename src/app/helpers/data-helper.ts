@@ -22,6 +22,8 @@ export function getPage<T>(
 
 }
 
+export type SortDirection = "asc" | "desc";
+
 export function sortBy<T>(
     data: T[],
     property: keyof T,

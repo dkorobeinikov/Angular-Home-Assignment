@@ -39,10 +39,6 @@ export class TablePaginator {
 
     public getPageRanges(): number[] {
 
-        if (this.totalPages < 5) {
-            return [1, 2, 3, 4, 5];
-        }
-
         const firsts = [1, 2];
         const lasts = [this.totalPages - 1, this.totalPages];
         const medians = this.totalPages % 2 === 0

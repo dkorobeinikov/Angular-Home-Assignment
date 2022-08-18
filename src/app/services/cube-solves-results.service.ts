@@ -1,4 +1,6 @@
 import { Injectable } from "@angular/core";
+import { Observable, skip, take, map } from "rxjs";
+import { sortBy, SortDirection } from "../helpers/data-helper";
 import { CsvLoaderService } from "./csv-loader.service";
 
 export interface ICubeSolveResult {
@@ -9,6 +11,12 @@ export interface ICubeSolveResult {
     date?: Date;
 }
 
+export interface IGetSolvesOptions {
+    count?: number;
+    startFrom?: number;
+    sortByProperty?: keyof ICubeSolveResult;
+    sortByDirection?: SortDirection;
+}
 @Injectable()
 export class CubeSolvesResultsService {
 
@@ -16,14 +24,48 @@ export class CubeSolvesResultsService {
         private csvLoaderService: CsvLoaderService,
     ) {}
 
-    public async getSolves(): Promise<ICubeSolveResult[]> {
+    public getTotalCount(): Observable<number> {
+
+        return new Observable<number>((subscriber) => {
+            this._get().then(solves => subscriber.next(solves.length))
+                .then(() => subscriber.complete())
+        });
+
+    }
+
+    public getSolves(options: IGetSolvesOptions): Observable<ICubeSolveResult[]> {
+
+        console.log("options: ", options);
+
+        let observable = new Observable<ICubeSolveResult[]>((subscriber) => {
+
+            this._get()
+                .then((solves) => subscriber.next(solves))
+                .then(() => subscriber.complete());
+
+        }).pipe(map(solves => {
+            return options.sortByProperty
+                ? sortBy(solves, options.sortByProperty, options.sortByDirection ?? "asc")
+                : solves;
+        })).pipe();
+
+        if ((options.count ?? 0) > 0) {
+            observable = observable.pipe(map((solves) => solves.slice(
+                options.startFrom,
+                (options.startFrom ?? 0) + (options.count ?? 0)))
+            );
+        }
+
+        return observable;
+
+    }
+
+    private async _get(): Promise<ICubeSolveResult[]> {
+
         const {
             columns,
             records,
-        } = await this.csvLoaderService.loadCSV("/assets/data.csv");
-
-        const solves: ICubeSolveResult[] = [];
-
+        } = await this.csvLoaderService.loadCSV("/assets/data.csv")
 
         const {
             noIndex,
@@ -33,21 +75,16 @@ export class CubeSolvesResultsService {
             dateIndex,
         } = this._getIndexes(columns);
 
-
-        for (const record of records) {
-            if (record[timeIndex].startsWith("DNF")) {
-                continue;
-            }
-            solves.push({
+        return records
+            .filter(record => !record[timeIndex].startsWith("DNF"))
+            .map(record => ({
                 no: parseInt(record[noIndex]),
                 comment: record[commentIndex] ?? "",
                 date: new Date(record[dateIndex]) ?? null,
                 scramble: record[scrambleIndex] ?? "",
                 time: parseFloat(record[timeIndex]) ?? Infinity,
-            });
-        }
+            }));
 
-        return solves;
     }
 
     private _getIndexes(

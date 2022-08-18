@@ -151,9 +151,8 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges {
     }
 
     public handleRequestPage(pageNumber: number) {
-        if (this.paginationStrategy === "uncontrolled") {
-            this.currentPage = pageNumber;
-        }
+        this.currentPage = pageNumber;
+
         this._updateVisibleData();
         this.paginationChange.emit({ currentPage: pageNumber, pageSize: this.pageSize });
     }
