@@ -13,8 +13,8 @@
         <label for="radius" class="label">Radius</label>
         <input type="number" id="radius" name="radius" class="input" [(ngModel)]="radius" />
         <br>
-        <label for="time" class="label">Time</label>
-        <input type="number" id="time" name="time" class="input" [(ngModel)]="time" />
+        <label for="time" class="label">Time (milliseconds)</label>
+        <input type="number" id="time" name="time" step="100" class="input" [(ngModel)]="time" />
         <br>
         <button type="submit" class="submit button">Submit</button>
         <button class="stop button" (click)="handleStop($event)" *ngIf="showStopButton">Stop</button>
