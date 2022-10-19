@@ -1,6 +1,8 @@
 <ul class="page-numbers">
     <li class="table-paginator-button prev"
         [ngClass]="{disabled: !hasPreviousPage}"
+        tabindex="0"
+        [attr.aria-disabled]="!hasPreviousPage"
         (click)="handleClickPrevious($event)">
         Previous
     </li>
@@ -13,6 +15,8 @@
         {{(num | isNotNaN) ? num : "..."}}
     </li>
     <li class="table-paginator-button next"
+        tabindex="0"
+        [attr.aria-disabled]="!hasNextPage"
         [ngClass]="{disabled: !hasNextPage}"
         (click)="handleClickNext($event)">
         Next
