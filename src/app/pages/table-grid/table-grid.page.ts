@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Observable } from "rxjs";
-import { Direction, IPaginationChangeEventArgs, ISortChangeEventArgs } from "../components/table/table-grid/table-grid.component";
-import { sortBy, SortDirection } from "../helpers/data-helper";
-import { CubeSolvesResultsService, ICubeSolveResult } from "../services/cube-solves-results.service";
+import { Direction, IPaginationChangeEventArgs, ISortChangeEventArgs } from "../../components/table/table-grid/table-grid.component";
+import { sortBy, SortDirection } from "../../helpers/data-helper";
+import { CubeSolvesResultsService, ICubeSolveResult } from "../../services/cube-solves-results.service";
 
 @Component({
     templateUrl: "./table-grid.page.html",

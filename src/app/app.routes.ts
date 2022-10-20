@@ -1,8 +1,8 @@
 import { Route } from "@angular/router";
 import { AppComponent } from "./app.component";
-import { HomePage } from "./pages/home.page";
-import { ProgressIndicatorPage } from "./pages/progress-indicator.page";
-import { TableGridPage } from "./pages/table-grid.page";
+import { HomePage } from "./pages/home";
+import { ProgressIndicatorPage } from "./pages/progress-indicator";
+import { TableGridPage } from "./pages/table-grid";
 
 export const appRoutes: Route[] = [
     {

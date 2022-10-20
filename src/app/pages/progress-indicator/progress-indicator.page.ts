@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { Direction, ISortChangeEventArgs } from "../components/table/table-grid/table-grid.component";
-import { sortBy } from "../helpers/data-helper";
-import { CubeSolvesResultsService, ICubeSolveResult } from "../services/cube-solves-results.service";
+import { Direction, ISortChangeEventArgs } from "../../components/table/table-grid/table-grid.component";
+import { sortBy } from "../../helpers/data-helper";
+import { CubeSolvesResultsService, ICubeSolveResult } from "../../services/cube-solves-results.service";
 
 @Component({
     templateUrl: "./progress-indicator.page.html",

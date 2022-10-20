@@ -15,9 +15,9 @@ import { TableColumnComponent } from './components/table/table-grid/table-column
 import { TableGridComponent } from './components/table/table-grid/table-grid.component';
 import { TablePaginator } from './components/table/table-paginator/table-paginator.component';
 import { TableViewComponent } from './components/table/table-view/table-view.component';
-import { HomePage } from './pages/home.page';
-import { ProgressIndicatorPage } from './pages/progress-indicator.page';
-import { TableGridPage } from './pages/table-grid.page';
+import { HomePage } from './pages/home';
+import { ProgressIndicatorPage } from './pages/progress-indicator';
+import { TableGridPage } from './pages/table-grid';
 import { CsvLoaderService } from './services/csv-loader.service';
 import { CubeSolvesResultsService } from './services/cube-solves-results.service';
 
