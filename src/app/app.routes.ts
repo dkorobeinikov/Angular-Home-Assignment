@@ -17,4 +17,8 @@ export const appRoutes: Route[] = [
         path: "progress-indicator",
         component: ProgressIndicatorPage,
     },
+    {
+        path: "autocomplete",
+        loadComponent: () => import("./pages/autocomplete").then(({ AutocompletePage }) => AutocompletePage),
+    }
 ];
