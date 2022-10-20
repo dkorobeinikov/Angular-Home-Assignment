@@ -1,5 +1,5 @@
-import { Component, Input, QueryList, AfterViewInit, ContentChildren, Output, EventEmitter, OnChanges, SimpleChanges, OnInit } from "@angular/core";
-import { isObservable, Observable } from "rxjs";
+import { Component, Input, QueryList, AfterViewInit, ContentChildren, Output, EventEmitter, OnChanges, SimpleChanges, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { combineLatest, isObservable, map, Observable, ReplaySubject, tap } from "rxjs";
 import { getPage, sortBy } from "src/app/helpers/data-helper";
 import { IColumnDefinition, TableColumnComponent } from "./table-column.directive";
 
@@ -24,13 +24,45 @@ export type PaginationStrategy = "controlled" | "uncontrolled";
     selector: "t-grid",
     templateUrl: "./table-grid.component.html",
     styleUrls: ["./table-grid.component.css"],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
+export class TableGridComponent<T> implements AfterViewInit, OnInit {
     @Input()
-    public data: T[] | Observable<T[]> = [];
+    public set data(value: T[] | Observable<T[]>) {
+        if (isObservable(value)) {
+            value.subscribe((data) => this._dataSubject?.next(data));
+        }
+        else {
+            this._dataSubject.next(value);
+        }
+    }
 
-    private _data: T[] = [];
-    public visibleData: T[] = [];
+    private _dataSubject  = new ReplaySubject<T[]>;
+    public data$ = this._dataSubject.asObservable();
+
+    private _dataLength = 0;
+
+    public visibleData$ = combineLatest([
+        this.data$,
+        // this.selectedPageSize$,
+        // this.currentPage$,
+    ]).pipe(
+        tap(([data]) => { console.log(data) }),
+        map(([data]) => {
+            if (this.paginationStrategy === "controlled" || !this.selectedPageSize) {
+                return data;
+            }
+
+            let sortedRecords = [...data];
+            const sortedByProperty = this.columnDefinitions.find(cd => cd.sortBy === "asc" || cd.sortBy === "desc");
+            if (sortedByProperty) {
+                sortedRecords = sortBy(sortedRecords, sortedByProperty.property, sortedByProperty.sortBy === "asc" ? "asc" : "desc");
+            }
+
+
+            return getPage(sortedRecords, this.selectedPageSize, this.currentPage);
+        }),
+    );
 
     @Input()
     public sortable = true;
@@ -57,7 +89,7 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
     public currentPage: number = 1;
 
     public get paginationStrategy(): PaginationStrategy {
-        if (this.total === null) {
+        if (!this.total) {
             return "uncontrolled";
         }
 
@@ -65,8 +97,8 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
     }
 
     public get totalRecords(): number {
-        if (this.total === null) {
-            return this._data.length;
+        if (!this.total) {
+            return this._dataLength;
         }
 
         return this.total;
@@ -93,6 +125,11 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
 
     public ngOnInit() {
         this.selectedPageSize = this.pageSize;
+
+        this.data$.pipe(tap((data) => {
+            console.log("data length: ", data.length);
+            this._dataLength = data.length;
+        })).subscribe();
     }
 
     public ngAfterViewInit(): void {
@@ -100,21 +137,6 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
         this.columnViews.changes.subscribe((columnViews) => {
             this.refreshColumnDefinitions();
         });
-    }
-
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes["data"] && changes["data"].previousValue !== changes["data"].currentValue) {
-            if (isObservable(this.data)) {
-                this.data.subscribe((data) => {
-                    this._data = [...data];
-                    this._updateVisibleData()
-                });
-            }
-            else {
-                this._data = [...this.data];
-                this._updateVisibleData();
-            }
-        }
     }
 
     public refreshColumnDefinitions() {
@@ -125,26 +147,6 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
                 sortBy: this.sortable && view.sortable ? "none" : "disabled",
             }))
         }, 0);
-    }
-
-    private getRecords() {
-
-        if (this.paginationStrategy === "controlled" || this.selectedPageSize === null) {
-            return this._data;
-        }
-
-        let sortedRecords = [...this._data];
-        const sortedByProperty = this.columnDefinitions.find(cd => cd.sortBy === "asc" || cd.sortBy === "desc");
-        if (sortedByProperty) {
-            sortedRecords = sortBy(sortedRecords, sortedByProperty.property, sortedByProperty.sortBy === "asc" ? "asc" : "desc");
-        }
-
-        return getPage(sortedRecords, this.selectedPageSize, this.currentPage);
-
-    }
-
-    private _updateVisibleData() {
-        this.visibleData = this.getRecords();
     }
 
     public getHeaderClasses(column: IColumnDefinition<T>) {
@@ -164,7 +166,7 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
 
         this._setColumnsSortBy(column);
 
-        this._updateVisibleData();
+        // this._updateVisibleData();
         this.sortChange.emit({
             columnName: column.property,
             direction: column.sortBy === "asc" ? Direction.Ascending : Direction.Descending,
@@ -174,7 +176,6 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
     public handleRequestPage(pageNumber: number) {
         this.currentPage = pageNumber;
 
-        this._updateVisibleData();
         this.paginationChange.emit({ currentPage: pageNumber, pageSize: this.selectedPageSize });
     }
 
@@ -183,7 +184,7 @@ export class TableGridComponent<T> implements AfterViewInit, OnChanges, OnInit {
         const value: number | null = isNaN(parsedInt) ? null : parsedInt;
 
         this.selectedPageSize = value;
-        this._updateVisibleData();
+        this.paginationChange.emit({ currentPage: this.currentPage, pageSize: this.selectedPageSize });
     }
 
     private _setColumnsSortBy(column: IColumnDefinition<T>) {

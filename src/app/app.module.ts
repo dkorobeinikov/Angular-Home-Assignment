@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -37,6 +38,7 @@ import { CubeSolvesResultsService } from './services/cube-solves-results.service
         AppComponent,
     ],
     imports: [
+        CommonModule,
         BrowserModule,
         FormsModule,
         RouterModule.forRoot(appRoutes),

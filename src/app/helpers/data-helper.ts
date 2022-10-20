@@ -4,21 +4,17 @@ export function getPage<T>(
     currentPage: number,
 ): T[] {
 
-    let result: T[] = [];
-
-    for (let i = 0; i < pageSize; i++) {
-        const recordIndex = (currentPage - 1) * pageSize + i;
-        const record = data[recordIndex];
-
-        if (!record) {
-            break;
-        } else {
-            result.push(record);
-        }
-
+    if (!pageSize || pageSize < 0) {
+        return [...data];
     }
 
-    return result;
+    const startFrom = (currentPage - 1) * pageSize;
+    const endIndex = (startFrom ?? 0) + pageSize;
+
+    return data.splice(
+        startFrom,
+        endIndex
+    );
 
 }
 

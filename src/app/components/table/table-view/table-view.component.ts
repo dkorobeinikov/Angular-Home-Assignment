@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Observable } from "rxjs";
 import { IColumnDefinition } from "../table-grid/table-column.directive";
 
 export enum Direction {
@@ -20,7 +21,7 @@ export type PaginationStrategy = "controlled" | "uncontrolled";
 })
 export class TableViewComponent<T>  {
     @Input()
-    public data: T[] = [];
+    public data$!: Observable<T[]>;
 
     @Input()
     public columnDefinitions: IColumnDefinition<T>[] = [];
