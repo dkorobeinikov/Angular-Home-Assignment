@@ -1,10 +1,19 @@
 <main class="container">
     <h2>Autocomplete Input</h2>
 
-    <section class="section-input">
+    <section class="autocomplete">
         <div class="input">
-            <input class="autocomplete-input" type="text" placeholder="Type here..." />
+            <input (input)="handleChange($event)" class="autocomplete-input" type="text" placeholder="Type here..." />
             <button class="button-search">Search</button>
+
+            <div class="suggestions" *ngIf="(autocompleteItems$ | async) as suggestions">
+                <ul *ngIf="suggestions.length > 0">
+                    <li *ngFor="let suggestion of suggestions">
+                        <h4 class="title">{{suggestion.title}}</h4>
+                        <p class="body">{{suggestion.body}}</p>
+                    </li>
+                </ul>
+            </div>
         </div>
     </section>
 </main>

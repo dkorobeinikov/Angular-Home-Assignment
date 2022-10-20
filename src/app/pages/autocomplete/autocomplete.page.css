@@ -3,13 +3,18 @@
     text-align: center
 }
 
+.autocomplete {
+    margin: 0 40px;
+}
+
 .input {
-    width: 80%;
     display: flex;
     margin: 0 auto;
 
     border: 1px solid #c0bfc3;
     transition: border-color 0.3s;
+
+    position: relative;
 }
 
 .input:hover {
@@ -40,4 +45,32 @@
 .button-search:hover {
     background-color: #6c7ae0;
     cursor: poitner;
+}
+
+.suggestions {
+    position: absolute;
+
+    overflow: scroll;
+    max-height: 300px;
+    top: 100%;
+
+    box-shadow: 0px 2px 7px -3px;
+}
+
+.suggestions > ul {
+    padding: 0;
+    text-align: left;
+}
+
+.suggestions > ul > li {
+    list-style: none;
+    padding: 16px;
+}
+
+.suggestions > ul > li:nth-child(even) {
+    background-color: #f8f6ff;
+}
+
+.suggestions .title {
+    font-weight: 600;
 }
