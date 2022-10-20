@@ -43,18 +43,22 @@ export class CubeSolvesResultsService {
                 .then((solves) => subscriber.next(solves))
                 .then(() => subscriber.complete());
 
-        }).pipe(map(solves => {
-            return options.sortByProperty
-                ? sortBy(solves, options.sortByProperty, options.sortByDirection ?? "asc")
-                : solves;
-        })).pipe();
+        }).pipe(
+            map(solves => {
+                return options.sortByProperty
+                    ? sortBy(solves, options.sortByProperty, options.sortByDirection ?? "asc")
+                    : solves;
+            }),
+            map((solves) => {
+                if ((options.count ?? 0) > 0) {
+                    return solves.slice(
+                        options.startFrom,
+                        (options.startFrom ?? 0) + (options.count ?? 0));
+                }
 
-        if ((options.count ?? 0) > 0) {
-            observable = observable.pipe(map((solves) => solves.slice(
-                options.startFrom,
-                (options.startFrom ?? 0) + (options.count ?? 0)))
-            );
-        }
+                return solves;
+            })
+        );
 
         return observable;
 

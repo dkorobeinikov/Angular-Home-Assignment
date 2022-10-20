@@ -17,7 +17,7 @@
     </div>
     <div class="table-wrapper">
         <t-table-view
-            [data]="visibleData"
+            [data$]="visibleData$"
             [columnDefinitions]="columnDefinitions"
             (columnHeaderClicked)="handleHeaderColumnClick($event)"
         >
