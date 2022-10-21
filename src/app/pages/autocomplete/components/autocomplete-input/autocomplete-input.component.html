@@ -1,0 +1,20 @@
+<div class="input">
+    <input (input)="handleChange($event)" class="autocomplete-input" type="text" placeholder="Type here..." />
+    <!-- <button class="button-search">Search</button> -->
+
+    <div class="suggestions" *ngIf="isVisible$ | async">
+        <ul>
+            <li
+                *ngFor="let suggestion of (autocompleteItems$ | async)"
+                tabindex="0"
+                (click)="handleSelectItem($event, suggestion)"
+            >
+                <ng-template
+                    *ngTemplateOutlet="itemTemplateRef; context: {item: suggestion}"
+                >
+                </ng-template>
+            </li>
+        </ul>
+    </div>
+
+</div>

@@ -2,18 +2,34 @@
     <h2>Autocomplete Input</h2>
 
     <section class="autocomplete">
-        <div class="input">
-            <input (input)="handleChange($event)" class="autocomplete-input" type="text" placeholder="Type here..." />
-            <button class="button-search">Search</button>
+        <autocomplete-input
+            [minimumSearchLentgh]="2"
+            [source$]="posts$"
+            [searchPredicate]="(isValidForAutocompletion)"
+            >
 
-            <div class="suggestions" *ngIf="(autocompleteItems$ | async) as suggestions">
-                <ul *ngIf="suggestions.length > 0">
-                    <li *ngFor="let suggestion of suggestions">
-                        <h4 class="title">{{suggestion.title}}</h4>
-                        <p class="body">{{suggestion.body}}</p>
-                    </li>
-                </ul>
-            </div>
-        </div>
+            <ng-template let-item="item">
+                <autocomplete-suggestion-item
+                    [title]="item.title"
+                    [body]="item.body"
+                >
+
+                </autocomplete-suggestion-item>
+            </ng-template>
+
+        </autocomplete-input>
+    </section>
+
+    <section class="added-items-list">
+        <ul *ngIf="!!(addedItems$ | async)?.length; else emptyAddedList">
+            <li *ngFor="let item of (addedItems$ | async)">
+                <h4>{{item.title}}</h4>
+                <p>{{item.body}}</p>
+            </li>
+        </ul>
     </section>
 </main>
+
+<ng-template #emptyAddedList>
+    <p>Empty List</p>
+</ng-template>

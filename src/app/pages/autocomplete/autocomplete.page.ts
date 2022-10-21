@@ -2,9 +2,12 @@ import { CommonModule } from "@angular/common";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { BehaviorSubject, combineLatest, debounce, debounceTime, map, tap } from "rxjs";
+import { BehaviorSubject, combineLatest, debounce, debounceTime, filter, map, tap } from "rxjs";
+import { AutocompleteInputComponent } from "./components/autocomplete-input/autocomplete-input.component";
+import { SuggestionItemComponent } from "./components/suggestion-item/suggestion-item.component";
 
-import { PostsService } from "./services/postsService";
+import { PostsService } from "./services/PostsService";
+import { IPost } from "./types";
 
 @Component({
     templateUrl: "./autocomplete.page.html",
@@ -13,7 +16,10 @@ import { PostsService } from "./services/postsService";
     imports: [
         CommonModule,
         HttpClientModule,
+        SuggestionItemComponent,
+        AutocompleteInputComponent,
     ],
+
     providers: [
         PostsService,
     ],
@@ -21,39 +27,44 @@ import { PostsService } from "./services/postsService";
 })
 export class AutocompletePage {
 
-    private autocompleteInputValueSubject = new BehaviorSubject<string>("");
-    public autocompleteInputValue$ = this.autocompleteInputValueSubject.asObservable();
+    private addedItemsIdsSubject = new BehaviorSubject<Set<number>>(new Set([]));
+    private addedItemsIds = this.addedItemsIdsSubject.asObservable();
 
-    public autocompleteItems$ = combineLatest([
-        this.autocompleteInputValue$,
-        this.posts.posts$,
+    public posts$ = this.posts.posts$;
+
+    public addedItems$ = combineLatest([
+        this.addedItemsIds,
+        this.posts$,
     ]).pipe(
-        tap(([searchTerm, posts]) => {
-            console.log("serch term: ", searchTerm);
-        }),
-        debounceTime(500),
-        map(([searchTerm, posts]) => {
-            if (!searchTerm || searchTerm.length < 3) {
-                return [];
-            }
-            return posts.filter(post => {
-                return post.title?.includes(searchTerm) || post.body?.includes(searchTerm);
-            });
-        }),
-        tap((filteredPosts) => {
-            console.log(filteredPosts);
+        map(([ids, posts]) => {
+            return posts.filter(post => ids.has(post.id));
         }),
     );
 
     public constructor(
         private posts: PostsService,
     ) {
+
+        this.isValidForAutocompletion = this.isValidForAutocompletion.bind(this);
     }
 
-    public handleChange($event: Event) {
-        console.log("handle change");
-        this.autocompleteInputValueSubject.next(($event.target as HTMLInputElement)?.value);
+    public handleSuggestionItemClick(_$event: Event, id: number) {
+        if (!id) {
+            return;
+        }
+
+        const nextSet = new Set(this.addedItemsIdsSubject.value);
+        nextSet.add(id);
+        this.addedItemsIdsSubject.next(
+            nextSet,
+        )
     }
 
+    public isValidForAutocompletion(post: IPost, searchTerm: string): boolean {
+
+        return !this.addedItemsIdsSubject.value.has(post.id) &&
+            (post.title?.includes(searchTerm) || post.body?.includes(searchTerm));
+
+    }
 
 }
