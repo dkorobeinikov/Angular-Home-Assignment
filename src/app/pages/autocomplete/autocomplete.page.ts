@@ -48,13 +48,13 @@ export class AutocompletePage {
         this.isValidForAutocompletion = this.isValidForAutocompletion.bind(this);
     }
 
-    public handleSuggestionItemClick(_$event: Event, id: number) {
-        if (!id) {
+    public handleSuggestionItemClick(post: IPost) {
+        if (!post) {
             return;
         }
 
         const nextSet = new Set(this.addedItemsIdsSubject.value);
-        nextSet.add(id);
+        nextSet.add(post.id);
         this.addedItemsIdsSubject.next(
             nextSet,
         )

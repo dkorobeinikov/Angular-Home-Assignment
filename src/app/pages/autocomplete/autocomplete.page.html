@@ -6,6 +6,7 @@
             [minimumSearchLentgh]="2"
             [source$]="posts$"
             [searchPredicate]="(isValidForAutocompletion)"
+            (onItemSelected)="handleSuggestionItemClick($event)"
             >
 
             <ng-template let-item="item">
