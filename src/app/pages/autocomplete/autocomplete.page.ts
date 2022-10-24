@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BehaviorSubject, combineLatest, debounce, debounceTime, filter, map, tap } from "rxjs";
 import { AutocompleteInputComponent } from "./components/autocomplete-input/autocomplete-input.component";
@@ -18,6 +19,8 @@ import { IPost } from "./types";
         HttpClientModule,
         SuggestionItemComponent,
         AutocompleteInputComponent,
+        FormsModule,
+        ReactiveFormsModule,
     ],
 
     providers: [
@@ -26,6 +29,8 @@ import { IPost } from "./types";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompletePage {
+
+    public postsControl = new FormControl("");
 
     private addedItemsIdsSubject = new BehaviorSubject<Set<number>>(new Set([]));
     private addedItemsIds = this.addedItemsIdsSubject.asObservable();
@@ -48,10 +53,12 @@ export class AutocompletePage {
         this.isValidForAutocompletion = this.isValidForAutocompletion.bind(this);
     }
 
-    public handleSuggestionItemClick(post: IPost) {
+    public handlePostSelected(post: IPost) {
         if (!post) {
             return;
         }
+
+        this.postsControl.patchValue(post.title, { emitEvent: false });
 
         const nextSet = new Set(this.addedItemsIdsSubject.value);
         nextSet.add(post.id);

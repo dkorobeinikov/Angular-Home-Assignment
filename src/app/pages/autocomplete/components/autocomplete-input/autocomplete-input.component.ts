@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, Output, TemplateRef, OnInit } from "@angular/core";
-import { BehaviorSubject, combineLatest, debounceTime as rxDebounceTime, map, Observable, tap } from "rxjs";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BehaviorSubject, combineLatest, debounceTime as rxDebounceTime, map, Observable, startWith, tap } from "rxjs";
 import { IPost } from "../../types";
 
 export type SearchPredicate<T> = (item: T, searchTerm: string) => boolean;
@@ -14,10 +15,14 @@ export type SearchPredicate<T> = (item: T, searchTerm: string) => boolean;
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteInputComponent<T> implements OnInit {
+
+    @Input() control: FormControl = new FormControl();
 
     @ContentChild(TemplateRef, {static: true})
     itemTemplateRef!: TemplateRef<{ item: T }>;
@@ -46,7 +51,10 @@ export class AutocompleteInputComponent<T> implements OnInit {
     public ngOnInit(): void {
 
         combineLatest([
-            this.autocompleteInputValue$,
+            this.control.valueChanges.pipe(
+                startWith(this.control.value),
+                map((value: string | null) => value ?? ''),
+            ),
             this.source$,
         ]).pipe(
             tap(([searchTerm]) => {
@@ -67,11 +75,6 @@ export class AutocompleteInputComponent<T> implements OnInit {
             this.autocompleteItemsSubject.next(items);
         });
 
-    }
-
-    public handleChange($event: Event) {
-        console.log("handle input change");
-        this.autocompleteInputValueSubject.next(($event.target as HTMLInputElement)?.value);
     }
 
     public handleSelectItem(_$event: Event, item: T) {

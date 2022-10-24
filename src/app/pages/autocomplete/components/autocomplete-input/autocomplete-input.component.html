@@ -1,6 +1,10 @@
 <div class="input">
-    <input (input)="handleChange($event)" class="autocomplete-input" type="text" placeholder="Type here..." />
-    <!-- <button class="button-search">Search</button> -->
+    <input
+        [formControl]="control"
+        class="autocomplete-input"
+        type="text"
+        placeholder="Type here..."
+    />
 
     <div class="suggestions" *ngIf="isVisible$ | async">
         <ul>

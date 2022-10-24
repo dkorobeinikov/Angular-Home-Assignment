@@ -3,11 +3,12 @@
 
     <section class="autocomplete">
         <autocomplete-input
+            [control]="postsControl"
             [minimumSearchLentgh]="2"
             [source$]="posts$"
             [debounceTime]="50"
             [searchPredicate]="(isValidForAutocompletion)"
-            (onItemSelected)="handleSuggestionItemClick($event)"
+            (onItemSelected)="handlePostSelected($event)"
             >
 
             <ng-template let-item="item">
