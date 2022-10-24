@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, Output, TemplateRef, OnInit } from "@angular/core";
-import { BehaviorSubject, combineLatest, debounceTime, map, Observable, tap } from "rxjs";
+import { BehaviorSubject, combineLatest, debounceTime as rxDebounceTime, map, Observable, tap } from "rxjs";
 import { IPost } from "../../types";
 
 export type SearchPredicate<T> = (item: T, searchTerm: string) => boolean;
@@ -26,6 +26,7 @@ export class AutocompleteInputComponent<T> implements OnInit {
     @Input() searchPredicate!: SearchPredicate<T>;
 
     @Input() minimumSearchLentgh = 0;
+    @Input() debounceTime = 500;
 
     @Output() onItemSelected = new EventEmitter<T>();
 
@@ -51,7 +52,7 @@ export class AutocompleteInputComponent<T> implements OnInit {
             tap(([searchTerm]) => {
                 console.log("serch term: ", searchTerm);
             }),
-            debounceTime(500),
+            rxDebounceTime(this.debounceTime),
             map(([searchTerm, items]) => {
                 if (!searchTerm || searchTerm.length < this.minimumSearchLentgh) {
                     return [];
@@ -59,9 +60,7 @@ export class AutocompleteInputComponent<T> implements OnInit {
                 return items.filter(item => this.searchPredicate(item, searchTerm));
             }),
             tap((items) => {
-                if (items.length > 0) {
-                    this.isVisibleSubject.next(true);
-                }
+                this.isVisibleSubject.next(items.length > 0);
                 console.log(items);
             }),
         ).subscribe((items) => {

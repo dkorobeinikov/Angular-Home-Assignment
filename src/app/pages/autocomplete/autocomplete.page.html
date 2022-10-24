@@ -5,6 +5,7 @@
         <autocomplete-input
             [minimumSearchLentgh]="2"
             [source$]="posts$"
+            [debounceTime]="50"
             [searchPredicate]="(isValidForAutocompletion)"
             (onItemSelected)="handleSuggestionItemClick($event)"
             >
