@@ -2,10 +2,14 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, Output, TemplateRef, OnInit } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BehaviorSubject, combineLatest, debounceTime as rxDebounceTime, map, Observable, startWith, tap } from "rxjs";
-import { IPost } from "../../types";
+
+import {
+    UntilDestroy, untilDestroyed,
+} from '@ngneat/until-destroy';
 
 export type SearchPredicate<T> = (item: T, searchTerm: string) => boolean;
 
+@UntilDestroy()
 @Component({
     selector: "autocomplete-input",
     templateUrl: "./autocomplete-input.component.html",
@@ -71,6 +75,7 @@ export class AutocompleteInputComponent<T> implements OnInit {
                 this.isVisibleSubject.next(items.length > 0);
                 console.log(items);
             }),
+            untilDestroyed(this),
         ).subscribe((items) => {
             this.autocompleteItemsSubject.next(items);
         });

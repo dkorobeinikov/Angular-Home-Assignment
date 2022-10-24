@@ -4,12 +4,18 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BehaviorSubject, combineLatest, debounce, debounceTime, filter, map, tap } from "rxjs";
+
+import {
+    UntilDestroy, untilDestroyed,
+} from '@ngneat/until-destroy';
+
 import { AutocompleteInputComponent } from "./components/autocomplete-input/autocomplete-input.component";
 import { SuggestionItemComponent } from "./components/suggestion-item/suggestion-item.component";
 
 import { PostsService } from "./services/PostsService";
 import { IPost } from "./types";
 
+@UntilDestroy()
 @Component({
     templateUrl: "./autocomplete.page.html",
     styleUrls: ["./autocomplete.page.css"],
@@ -44,6 +50,7 @@ export class AutocompletePage {
         map(([ids, posts]) => {
             return posts.filter(post => ids.has(post.id));
         }),
+        untilDestroyed(this),
     );
 
     public constructor(
