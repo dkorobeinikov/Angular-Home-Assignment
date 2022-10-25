@@ -43,14 +43,16 @@ export class AutocompleteInputComponent<T> implements OnInit {
 
     @Output() onItemSelected = new EventEmitter<T>();
 
-    private isVisibleSubject = new BehaviorSubject<boolean>(false);
-    public isVisible$ = this.isVisibleSubject.asObservable();
-
     private autocompleteInputValueSubject = new BehaviorSubject<string>("");
     public autocompleteInputValue$ = this.autocompleteInputValueSubject.asObservable();
 
     private autocompleteItemsSubject = new BehaviorSubject<T[]>([]);
     public autocompleteItems$ = this.autocompleteItemsSubject.asObservable();
+
+    public isVisible$ = this.autocompleteItems$.pipe(map((items) => items.length > 0));
+
+    private isLoadingSubject = new BehaviorSubject<boolean>(false);
+    public isLoading$ = this.isLoadingSubject.asObservable();
 
     public constructor(
         private posts: PostsService,
@@ -64,6 +66,10 @@ export class AutocompleteInputComponent<T> implements OnInit {
             this.control.valueChanges.pipe(
                 startWith(this.control.value),
                 map((value: string | null) => value ?? ''),
+                tap(value => {
+                    this.autocompleteItemsSubject.next([]);
+                    this.isLoadingSubject.next(value.length >= this.minimumSearchLentgh);
+                })
             ),
         ]).pipe(
             rxDebounceTime(this.debounceTime),
@@ -74,10 +80,7 @@ export class AutocompleteInputComponent<T> implements OnInit {
 
                 return this.load$(searchTerm);
             }),
-            tap((items) => {
-                this.isVisibleSubject.next(items.length > 0);
-                console.log(items);
-            }),
+            tap(() => this.isLoadingSubject.next(false)),
             untilDestroyed(this),
         ).subscribe((items) => {
             this.autocompleteItemsSubject.next(items);
@@ -88,7 +91,7 @@ export class AutocompleteInputComponent<T> implements OnInit {
     public handleSelectItem(_$event: Event, item: T) {
 
         this.onItemSelected.emit(item);
-        this.isVisibleSubject.next(false);
+        this.autocompleteItemsSubject.next([]);
 
     }
 

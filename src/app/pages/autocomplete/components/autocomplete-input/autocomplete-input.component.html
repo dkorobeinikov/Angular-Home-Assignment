@@ -6,8 +6,11 @@
         placeholder="Type here..."
     />
 
-    <div class="suggestions" *ngIf="isVisible$ | async">
+
+
+    <div class="suggestions" *ngIf="(isVisible$ | async) || (isLoading$ | async)">
         <ul>
+            <li *ngIf="isLoading$ | async">Loading...</li>
             <li
                 *ngFor="let suggestion of (autocompleteItems$ | async)"
                 tabindex="0"
