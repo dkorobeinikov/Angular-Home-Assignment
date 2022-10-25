@@ -1,13 +1,15 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, Output, TemplateRef, OnInit } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BehaviorSubject, combineLatest, debounceTime as rxDebounceTime, map, Observable, startWith, tap } from "rxjs";
+import { BehaviorSubject, combineLatest, debounceTime as rxDebounceTime, map, Observable, startWith, switchMap, tap } from "rxjs";
 
 import {
     UntilDestroy, untilDestroyed,
 } from '@ngneat/until-destroy';
+import { PostsService } from "../../services/PostsService";
 
 export type SearchPredicate<T> = (item: T, searchTerm: string) => boolean;
+export type LoadAutocompleteItems<T> = (searchTerm: string) => Observable<T[]>;
 
 @UntilDestroy()
 @Component({
@@ -22,6 +24,9 @@ export type SearchPredicate<T> = (item: T, searchTerm: string) => boolean;
         FormsModule,
         ReactiveFormsModule,
     ],
+    providers: [
+        PostsService,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteInputComponent<T> implements OnInit {
@@ -31,8 +36,7 @@ export class AutocompleteInputComponent<T> implements OnInit {
     @ContentChild(TemplateRef, {static: true})
     itemTemplateRef!: TemplateRef<{ item: T }>;
 
-    @Input() source$!: Observable<T[]>;
-    @Input() searchPredicate!: SearchPredicate<T>;
+    @Input() load$!: LoadAutocompleteItems<T>;
 
     @Input() minimumSearchLentgh = 0;
     @Input() debounceTime = 500;
@@ -48,7 +52,9 @@ export class AutocompleteInputComponent<T> implements OnInit {
     private autocompleteItemsSubject = new BehaviorSubject<T[]>([]);
     public autocompleteItems$ = this.autocompleteItemsSubject.asObservable();
 
-    public constructor() {
+    public constructor(
+        private posts: PostsService,
+    ) {
 
     }
 
@@ -59,17 +65,14 @@ export class AutocompleteInputComponent<T> implements OnInit {
                 startWith(this.control.value),
                 map((value: string | null) => value ?? ''),
             ),
-            this.source$,
         ]).pipe(
-            tap(([searchTerm]) => {
-                console.log("serch term: ", searchTerm);
-            }),
             rxDebounceTime(this.debounceTime),
-            map(([searchTerm, items]) => {
-                if (!searchTerm || searchTerm.length < this.minimumSearchLentgh) {
+            switchMap(([ searchTerm ]) => {
+                if (searchTerm.length < this.minimumSearchLentgh) {
                     return [];
                 }
-                return items.filter(item => this.searchPredicate(item, searchTerm));
+
+                return this.load$(searchTerm);
             }),
             tap((items) => {
                 this.isVisibleSubject.next(items.length > 0);
