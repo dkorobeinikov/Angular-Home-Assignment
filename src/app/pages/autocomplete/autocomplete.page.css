@@ -1,0 +1,12 @@
+.container {
+    padding: 3rem;
+    text-align: center
+}
+
+.autocomplete {
+    margin: 0 40px;
+}
+
+.suggestions .title {
+    font-weight: 600;
+}

@@ -1,0 +1,27 @@
+<div class="input">
+    <input
+        [formControl]="control"
+        class="autocomplete-input"
+        type="text"
+        placeholder="Type here..."
+    />
+
+
+
+    <div class="suggestions" *ngIf="(isVisible$ | async) || (isLoading$ | async)">
+        <ul>
+            <li *ngIf="isLoading$ | async">Loading...</li>
+            <li
+                *ngFor="let suggestion of (autocompleteItems$ | async)"
+                tabindex="0"
+                (click)="handleSelectItem($event, suggestion)"
+            >
+                <ng-template
+                    *ngTemplateOutlet="itemTemplateRef; context: {item: suggestion}"
+                >
+                </ng-template>
+            </li>
+        </ul>
+    </div>
+
+</div>

@@ -1,0 +1,71 @@
+.input {
+    display: flex;
+    margin: 0 auto;
+
+    border: 1px solid #c0bfc3;
+    transition: border-color 0.3s;
+
+    position: relative;
+}
+
+.input:hover {
+    border-color: #4856b7;
+}
+
+.autocomplete-input {
+    width: 100%;
+    padding: 1em 1em;
+    font-size: 1.2em;
+    line-height: 1.5;
+    border: none;
+}
+
+.button-search {
+    padding: 1.5em 2em;
+    font-size: 1.2em;
+    border-radius: 0;
+    border: none;
+
+
+    color: white;
+    background-color: #4856b7;
+    transition: background-color 0.3s;
+    margin: -1px;
+}
+
+.button-search:hover {
+    background-color: #6c7ae0;
+    cursor: poitner;
+}
+
+.suggestions {
+    position: absolute;
+
+    overflow: scroll;
+    width: 100%;
+    max-height: 300px;
+    top: 100%;
+
+    box-shadow: 0px 2px 7px -3px;
+    background-color: white;;
+}
+
+.suggestions > ul {
+    padding: 0;
+    text-align: left;
+}
+
+.suggestions > ul > li {
+    list-style: none;
+    padding: 16px;
+    cursor: pointer;
+}
+
+.suggestions > ul > li:nth-child(even) {
+    background-color: #f8f6ff;
+}
+
+.suggestions > ul > li:hover,
+.suggestions > ul > li:focus {
+    background-color: #f2f2f2;
+}

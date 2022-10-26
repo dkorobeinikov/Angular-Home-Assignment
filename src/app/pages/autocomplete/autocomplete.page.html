@@ -1,0 +1,37 @@
+<main class="container">
+    <h2>Autocomplete Input</h2>
+
+    <section class="autocomplete">
+        <autocomplete-input
+            [control]="postsControl"
+            [minimumSearchLentgh]="2"
+            [load$]="loadPosts"
+            [debounceTime]="50"
+            (onItemSelected)="handlePostSelected($event)"
+            >
+
+            <ng-template let-item="item">
+                <autocomplete-suggestion-item
+                    [title]="item.title"
+                    [body]="item.body"
+                >
+
+                </autocomplete-suggestion-item>
+            </ng-template>
+
+        </autocomplete-input>
+    </section>
+
+    <section class="added-items-list">
+        <ul *ngIf="!!(addedItems$ | async)?.length; else emptyAddedList">
+            <li *ngFor="let item of (addedItems$ | async)">
+                <h4>{{item.title}}</h4>
+                <p>{{item.body}}</p>
+            </li>
+        </ul>
+    </section>
+</main>
+
+<ng-template #emptyAddedList>
+    <p>Empty List</p>
+</ng-template>
