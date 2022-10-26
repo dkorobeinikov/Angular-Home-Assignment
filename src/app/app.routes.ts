@@ -20,5 +20,9 @@ export const appRoutes: Route[] = [
     {
         path: "autocomplete",
         loadComponent: () => import("./pages/autocomplete").then(({ AutocompletePage }) => AutocompletePage),
-    }
+    },
+    {
+        path: "timer",
+        loadComponent: () => import("./pages/timer").then(({ TimerPage }) => TimerPage),
+    },
 ];

@@ -20,6 +20,7 @@ import { ProgressIndicatorPage } from './pages/progress-indicator';
 import { TableGridPage } from './pages/table-grid';
 import { CsvLoaderService } from './services/csv-loader.service';
 import { CubeSolvesResultsService } from './services/cube-solves-results.service';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
     declarations: [
@@ -42,6 +43,7 @@ import { CubeSolvesResultsService } from './services/cube-solves-results.service
         BrowserModule,
         FormsModule,
         RouterModule.forRoot(appRoutes),
+        StoreModule.forRoot({}, {}),
     ],
     providers: [
         CsvLoaderService,
