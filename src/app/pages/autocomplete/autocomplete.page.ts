@@ -60,8 +60,8 @@ export class AutocompletePage {
         this.isValidForAutocompletion = this.isValidForAutocompletion.bind(this);
     }
 
-    public loadPosts(searchTerm: string) {
-        return this.posts.seach(searchTerm);
+    public loadPosts = (searchTerm: string) => {
+        return this.posts.search(searchTerm);
     }
 
     public handlePostSelected(post: IPost) {

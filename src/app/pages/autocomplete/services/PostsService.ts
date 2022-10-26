@@ -22,7 +22,7 @@ export class PostsService {
             shareReplay(1),
         );
 
-    public seach(searchTerm: string) {
+    public search(searchTerm: string) {
         return this.posts$.pipe(
             delay(500),
             map((posts) => {

@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, Output, TemplateRef, OnInit } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BehaviorSubject, combineLatest, debounceTime as rxDebounceTime, map, Observable, startWith, switchMap, tap } from "rxjs";
+import { BehaviorSubject, combineLatest, debounceTime as rxDebounceTime, finalize, map, Observable, startWith, switchMap, tap } from "rxjs";
 
 import {
     UntilDestroy, untilDestroyed,
@@ -73,9 +73,10 @@ export class AutocompleteInputComponent<T> implements OnInit {
                     return [];
                 }
 
-                return this.load$(searchTerm);
+                return this.load$(searchTerm).pipe(
+                    finalize(() => this.isLoadingSubject.next(false))
+                );
             }),
-            tap(() => this.isLoadingSubject.next(false)),
             untilDestroyed(this),
         ).subscribe((items) => {
             this.autocompleteItemsSubject.next(items);
