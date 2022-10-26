@@ -6,7 +6,6 @@ import { BehaviorSubject, combineLatest, debounceTime as rxDebounceTime, map, Ob
 import {
     UntilDestroy, untilDestroyed,
 } from '@ngneat/until-destroy';
-import { PostsService } from "../../services/PostsService";
 
 export type SearchPredicate<T> = (item: T, searchTerm: string) => boolean;
 export type LoadAutocompleteItems<T> = (searchTerm: string) => Observable<T[]>;
@@ -23,9 +22,6 @@ export type LoadAutocompleteItems<T> = (searchTerm: string) => Observable<T[]>;
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-    ],
-    providers: [
-        PostsService,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -55,7 +51,6 @@ export class AutocompleteInputComponent<T> implements OnInit {
     public isLoading$ = this.isLoadingSubject.asObservable();
 
     public constructor(
-        private posts: PostsService,
     ) {
 
     }
