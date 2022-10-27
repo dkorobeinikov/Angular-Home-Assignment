@@ -1,17 +1,29 @@
 <div class="container">
-    <div class="timer">
-        <p
-            #timeLabel
-            class="time"
-            [attr.data-state]="timerState$ | async"
-            [innerHTML]="(time$ | async) | toSeconds"
-        ></p>
-    </div>
+    <ng-container *ngIf="!(showMainView$ | async)">
+        <div class="timer big">
+            <p
+                #timeLabel
+                class="time"
+                [attr.data-state]="timerState$ | async"
+                [innerHTML]="(time$ | async) | toSeconds: 1"
+            ></p>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="(showMainView$ | async)">
+        <div class="timer">
+            <p
+                #timeLabel
+                class="time"
+                [attr.data-state]="timerState$ | async"
+                [innerHTML]="(time$ | async) | toSeconds"
+            ></p>
+        </div>
 
-    <div class="table" *ngIf="solves$ | async">
-        <t-table-view
-            [data$]="solves$"
-            [columnDefinitions]="solvesTableColumns"
-        ></t-table-view>
-    </div>
+        <div class="table" *ngIf="solves$ | async">
+            <t-table-view
+                [data$]="solves$"
+                [columnDefinitions]="solvesTableColumns"
+            ></t-table-view>
+        </div>
+    </ng-container>
 </div>

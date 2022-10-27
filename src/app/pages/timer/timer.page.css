@@ -8,6 +8,10 @@
     text-align: center;
 }
 
+.timer.big .time {
+    font-size: 200px;
+}
+
 .time[data-state='Initializing'] {
     color: red;
 }

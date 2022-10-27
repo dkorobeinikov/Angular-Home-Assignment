@@ -46,6 +46,10 @@ export class TimerPage implements OnInit {
         return this.timerState$.value;
     }
 
+    public showMainView$ = this.timerState$.pipe(
+        map(state => !(["ReadyToStart", "Running"] as TimerState[]).includes(state) ),
+    );
+
     public time$ = this.timer.time$;
     private _timeout: number | null = null;
 
