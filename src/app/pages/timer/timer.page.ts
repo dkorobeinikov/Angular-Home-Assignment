@@ -1,15 +1,15 @@
-import { CommonModule, DOCUMENT } from "@angular/common";
-import { ChangeDetectionStrategy, Component, ElementRef, AfterViewInit, ViewChild, Inject, OnInit, HostListener } from "@angular/core";
-import { BehaviorSubject, delay, filter, from, fromEvent, map, Observable, Subscriber, tap, withLatestFrom } from "rxjs";
+import { CommonModule, } from "@angular/common";
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, OnInit, HostListener } from "@angular/core";
+import { BehaviorSubject, map, Observable, } from "rxjs";
 import { Store } from '@ngrx/store';
-import { TableGridComponent } from "src/app/components/table/table-grid/table-grid.component";
 import { TableViewComponent } from "src/app/components/table/table-view/table-view.component";
 import * as Pipes from "./pipes";
 import { TimerService } from "./services/timer.service";
 
-import { ITimerState, SolvesActions, SolvesSelectors } from "./state";
+import { ITimerState, TimerActions, TimerSelectors } from "./state";
 import { IColumnDefinition } from "src/app/components/table/table-grid/table-column.directive";
 import { ISolve } from "./types";
+import { SolvesService } from "./services/solves.service";
 
 type TimerState = "None" | "Initializing" | "ReadyToStart" | "Running" | "Stopped";
 
@@ -31,6 +31,7 @@ function canBeStoped(state: TimerState) {
     ],
     providers: [
         TimerService,
+        SolvesService,
     ],
     templateUrl: "./timer.page.html",
     styleUrls: [
@@ -58,12 +59,12 @@ export class TimerPage implements OnInit {
         {
             name: "",
             property: "no",
-            sortBy: "none",
+            sortBy: "disabled",
         },
         {
             name: "Current",
             property: "time",
-            sortBy: "none",
+            sortBy: "disabled",
         },
     ];
 
@@ -76,7 +77,8 @@ export class TimerPage implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.solves$ = this.store.select(SolvesSelectors.getSolves);
+        this.store.dispatch(TimerActions.loadSolves());
+        this.solves$ = this.store.select(TimerSelectors.getSolves);
     }
 
     @HostListener("document:keydown.space", ["$event"])
@@ -130,7 +132,7 @@ export class TimerPage implements OnInit {
     }
 
     private addSolve(time: number, scramble: "", dnf = false) {
-        this.store.dispatch(SolvesActions.addSolve({ time, scramble, dnf, date: new Date() }))
+        this.store.dispatch(TimerActions.addSolve({ time, scramble, dnf, date: new Date() }))
     }
 
 }
