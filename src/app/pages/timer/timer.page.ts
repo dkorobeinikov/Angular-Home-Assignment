@@ -77,9 +77,6 @@ export class TimerPage implements OnInit {
 
     public ngOnInit(): void {
         this.solves$ = this.store.select(SolvesSelectors.getSolves);
-        // this.solves$.subscribe((solves) => {
-        //     console.log(solves);
-        // });
     }
 
     @HostListener("document:keydown.space", ["$event"])
@@ -92,6 +89,7 @@ export class TimerPage implements OnInit {
             this.timerState$.next("Initializing");
             this._timeout = window.setTimeout(() => {
                 if (this.timerState === "Initializing") {
+                    this.timer.resetTime();
                     this.timerState$.next("ReadyToStart");
                 }
             }, 500);

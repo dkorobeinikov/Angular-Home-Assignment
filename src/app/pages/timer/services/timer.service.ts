@@ -9,6 +9,10 @@ export class TimerService {
 
     private _timer: Timer | null = null;
 
+    public resetTime() {
+        this.timeSubject.next(0);
+    }
+
     public start() {
         this._timer = new Timer();
         this._timer.start().subscribe({
@@ -40,7 +44,6 @@ class Timer {
     public start() {
 
         return new Observable<number>((subscriber) => {
-            console.log("create subsriber");
             this._subscriber = subscriber;
             this._subscriber.next(0);
             this._startTime = Date.now();
