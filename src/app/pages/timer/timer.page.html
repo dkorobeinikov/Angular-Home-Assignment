@@ -1,3 +1,12 @@
 <div class="container">
     <h1>Timer</h1>
+
+    <div class="timer">
+        <p
+            #timeLabel
+            class="time"
+            [attr.data-state]="timerState$ | async"
+            [innerHTML]="(time$ | async) | toSeconds"
+        ></p>
+    </div>
 </div>

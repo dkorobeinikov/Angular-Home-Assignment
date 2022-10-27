@@ -42,7 +42,7 @@ describe("Post Service", () => {
 
         it("Searches posts by given term", (done) => {
 
-            postsService.seach("2").subscribe(posts => {
+            postsService.search("2").subscribe(posts => {
                 expect(posts.length).toEqual(1);
                 expect(posts[0]).toEqual(POSTS[1]);
                 done();

@@ -21,6 +21,7 @@ import { TableGridPage } from './pages/table-grid';
 import { CsvLoaderService } from './services/csv-loader.service';
 import { CubeSolvesResultsService } from './services/cube-solves-results.service';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
     declarations: [
@@ -44,6 +45,7 @@ import { StoreModule } from '@ngrx/store';
         FormsModule,
         RouterModule.forRoot(appRoutes),
         StoreModule.forRoot({}, {}),
+        EffectsModule.forRoot([]),
     ],
     providers: [
         CsvLoaderService,

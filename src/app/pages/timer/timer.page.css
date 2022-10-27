@@ -1,0 +1,17 @@
+.timer {
+    margin-top: 40px;
+}
+
+.time {
+    font-family: lcd;
+    font-size: 160px;
+    text-align: center;
+}
+
+.time[data-state='Initializing'] {
+    color: red;
+}
+
+.time[data-state='ReadyToStart'] {
+    color: green;
+}

@@ -1,8 +1,12 @@
 import { Route } from "@angular/router";
-import { AppComponent } from "./app.component";
+
+import { StoreModule } from '@ngrx/store';
 import { HomePage } from "./pages/home";
 import { ProgressIndicatorPage } from "./pages/progress-indicator";
 import { TableGridPage } from "./pages/table-grid";
+import { importProvidersFrom } from "@angular/core";
+import { solvesReducer } from "./pages/timer/state/timer.reducer";
+
 
 export const appRoutes: Route[] = [
     {
@@ -24,5 +28,11 @@ export const appRoutes: Route[] = [
     {
         path: "timer",
         loadComponent: () => import("./pages/timer").then(({ TimerPage }) => TimerPage),
+        providers: [
+            importProvidersFrom(
+                StoreModule.forFeature("solves", solvesReducer),
+                // EffectsModule.forFeature([SolvesEffects]),
+            )
+        ],
     },
 ];
