@@ -32,7 +32,7 @@ export const appRoutes: Route[] = [
             importProvidersFrom(
                 StoreModule.forFeature("solves", solvesReducer),
                 // EffectsModule.forFeature([SolvesEffects]),
-            )
+            ),
         ],
     },
 ];

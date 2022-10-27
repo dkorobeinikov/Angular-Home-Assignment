@@ -15,3 +15,10 @@
 .time[data-state='ReadyToStart'] {
     color: green;
 }
+
+.table {
+    width: 300px;
+    height: 200px;
+
+    margin: 0 auto;
+}

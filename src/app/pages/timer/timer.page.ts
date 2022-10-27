@@ -1,8 +1,15 @@
 import { CommonModule, DOCUMENT } from "@angular/common";
 import { ChangeDetectionStrategy, Component, ElementRef, AfterViewInit, ViewChild, Inject, OnInit, HostListener } from "@angular/core";
 import { BehaviorSubject, delay, filter, from, fromEvent, map, Observable, Subscriber, tap, withLatestFrom } from "rxjs";
+import { Store } from '@ngrx/store';
+import { TableGridComponent } from "src/app/components/table/table-grid/table-grid.component";
+import { TableViewComponent } from "src/app/components/table/table-view/table-view.component";
 import * as Pipes from "./pipes";
 import { TimerService } from "./services/timer.service";
+
+import { ITimerState, SolvesActions, SolvesSelectors } from "./state";
+import { IColumnDefinition } from "src/app/components/table/table-grid/table-column.directive";
+import { ISolve } from "./types";
 
 type TimerState = "None" | "Initializing" | "ReadyToStart" | "Running" | "Stopped";
 
@@ -16,9 +23,10 @@ function canBeStoped(state: TimerState) {
 
 @Component({
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     imports: [
         CommonModule,
+        TableViewComponent,
         Pipes.NumberToSecondsPipe,
     ],
     providers: [
@@ -29,7 +37,7 @@ function canBeStoped(state: TimerState) {
         "./timer.page.css",
     ],
 })
-export class TimerPage {
+export class TimerPage implements OnInit {
     @ViewChild("timeLabel")
     public timeLabel!: ElementRef<HTMLElement>;
 
@@ -41,12 +49,33 @@ export class TimerPage {
     public time$ = this.timer.time$;
     private _timeout: number | null = null;
 
+    public solves$!: Observable<ISolve[]>;
+    public solvesTableColumns: IColumnDefinition<ISolve>[] = [
+        {
+            name: "",
+            property: "no",
+            sortBy: "none",
+        },
+        {
+            name: "Current",
+            property: "time",
+            sortBy: "none",
+        },
+    ];
+
+
     public constructor(
-        @Inject(DOCUMENT)
-        private _document: Document,
+        private store: Store<ITimerState>,
         private timer: TimerService,
     ) {
 
+    }
+
+    public ngOnInit(): void {
+        this.solves$ = this.store.select(SolvesSelectors.getSolves);
+        // this.solves$.subscribe((solves) => {
+        //     console.log(solves);
+        // });
     }
 
     @HostListener("document:keydown.space", ["$event"])
@@ -67,8 +96,10 @@ export class TimerPage {
         }
 
         if (canBeStoped(this.timerState)) {
-            this.timer.stop();
+            const time = this.timer.stop();
             this.timerState$.next("Stopped");
+
+            this.addSolve(time, "");
             return;
         }
     }
@@ -94,6 +125,10 @@ export class TimerPage {
             }
             return;
         }
+    }
+
+    private addSolve(time: number, scramble: "", dnf = false) {
+        this.store.dispatch(SolvesActions.addSolve({ time, scramble, dnf, date: new Date() }))
     }
 
 }

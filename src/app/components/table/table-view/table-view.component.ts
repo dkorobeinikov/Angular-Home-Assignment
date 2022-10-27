@@ -1,3 +1,4 @@
+import { CommonModule } from "@angular/common";
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { Observable } from "rxjs";
 import { IColumnDefinition } from "../table-grid/table-column.directive";
@@ -18,6 +19,10 @@ export type PaginationStrategy = "controlled" | "uncontrolled";
     selector: "t-table-view",
     templateUrl: "./table-view.component.html",
     styleUrls: ["./table-view.component.css"],
+    imports: [
+        CommonModule,
+    ],
+    standalone: true,
 })
 export class TableViewComponent<T>  {
     @Input()

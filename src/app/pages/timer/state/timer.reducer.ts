@@ -31,7 +31,7 @@ export const solvesReducer = createReducer<ITimerState>(
 
         return {
             ...state,
-            sovles: [
+            solves: [
                 ...state.solves,
                 {
                     no: latestNo + 1,

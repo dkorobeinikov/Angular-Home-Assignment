@@ -17,8 +17,11 @@ export class TimerService {
     }
 
     public stop() {
-        this.timeSubject.next(this._timer?.stop() ?? 0);
+        const timeResult = this._timer?.stop();
+        this.timeSubject.next(timeResult ?? 0);
         this._timer = null;
+
+        return timeResult || 0;
     }
 
 }
