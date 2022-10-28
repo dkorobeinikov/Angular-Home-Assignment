@@ -1,5 +1,6 @@
 <div class="container">
     <ng-container *ngIf="!(showMainView$ | async)">
+        <div class="empty"></div>
         <div class="timer big">
             <p
                 #timeLabel
@@ -10,6 +11,13 @@
         </div>
     </ng-container>
     <ng-container *ngIf="(showMainView$ | async)">
+        <div class="table" *ngIf="solves$ | async">
+            <h2>Results:</h2>
+            <t-table-view
+                [data$]="solves$"
+                [columnDefinitions]="solvesTableColumns"
+            ></t-table-view>
+        </div>
         <div class="timer">
             <p
                 #timeLabel
@@ -19,11 +27,5 @@
             ></p>
         </div>
 
-        <div class="table" *ngIf="solves$ | async">
-            <t-table-view
-                [data$]="solves$"
-                [columnDefinitions]="solvesTableColumns"
-            ></t-table-view>
-        </div>
     </ng-container>
 </div>

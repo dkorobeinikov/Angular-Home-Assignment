@@ -10,6 +10,7 @@ import { ITimerState, TimerActions, TimerSelectors } from "./state";
 import { IColumnDefinition } from "src/app/components/table/table-grid/table-column.directive";
 import { ISolve } from "./types";
 import { SolvesService } from "./services/solves.service";
+import { splitSecondsToMilliseconds } from "./utils/time";
 
 type TimerState = "None" | "Initializing" | "ReadyToStart" | "Running" | "Stopped";
 
@@ -19,6 +20,11 @@ function canBeStarted(state: TimerState) {
 
 function canBeStoped(state: TimerState) {
     return (["Running"] as TimerState[]).includes(state);
+}
+
+interface ISolveDTO {
+    no: number;
+    displayTime: string;
 }
 
 @Component({
@@ -54,16 +60,16 @@ export class TimerPage implements OnInit {
     public time$ = this.timer.time$;
     private _timeout: number | null = null;
 
-    public solves$!: Observable<ISolve[]>;
-    public solvesTableColumns: IColumnDefinition<ISolve>[] = [
+    public solves$!: Observable<ISolveDTO[]>;
+    public solvesTableColumns: IColumnDefinition<ISolveDTO>[] = [
         {
             name: "",
             property: "no",
             sortBy: "disabled",
         },
         {
-            name: "Current",
-            property: "time",
+            name: "Time",
+            property: "displayTime",
             sortBy: "disabled",
         },
     ];
@@ -78,7 +84,17 @@ export class TimerPage implements OnInit {
 
     public ngOnInit(): void {
         this.store.dispatch(TimerActions.loadSolves());
-        this.solves$ = this.store.select(TimerSelectors.getSolves);
+        this.solves$ = this.store.select(TimerSelectors.getSolves).pipe(
+            map((solves) => {
+                return solves.map(solve => {
+                    const { milliseconds, seconds } = splitSecondsToMilliseconds(solve.time, 2);
+                    return {
+                        no: solve.no,
+                        displayTime: `${seconds}.${milliseconds}`,
+                    } as ISolveDTO;
+                }).reverse();
+            })
+        );
     }
 
     @HostListener("document:keydown.space", ["$event"])

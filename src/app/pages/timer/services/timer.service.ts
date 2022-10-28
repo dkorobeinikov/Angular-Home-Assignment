@@ -61,8 +61,6 @@ class Timer {
     }
 
     private _onNextTick() {
-        console.log("_onNextTick");
-
         this._subscriber?.next(Date.now() - (this._startTime ?? 0));
         this._rafNumber = requestAnimationFrame(() => this._onNextTick());
 
