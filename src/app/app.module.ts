@@ -20,13 +20,14 @@ import { ProgressIndicatorPage } from './pages/progress-indicator';
 import { TableGridPage } from './pages/table-grid';
 import { CsvLoaderService } from './services/csv-loader.service';
 import { CubeSolvesResultsService } from './services/cube-solves-results.service';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
     declarations: [
         IsNaNPipe,
         IsNotNaNPipe,
         NavBarComponent,
-        TableViewComponent,
         TableColumnComponent,
         TablePaginator,
         TableGridComponent,
@@ -41,7 +42,10 @@ import { CubeSolvesResultsService } from './services/cube-solves-results.service
         CommonModule,
         BrowserModule,
         FormsModule,
+        TableViewComponent,
         RouterModule.forRoot(appRoutes),
+        StoreModule.forRoot({}, {}),
+        EffectsModule.forRoot([]),
     ],
     providers: [
         CsvLoaderService,

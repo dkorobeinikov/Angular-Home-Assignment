@@ -1,0 +1,37 @@
+.container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.timer {
+    margin-top: 40px;
+}
+
+.time {
+    font-family: lcd;
+    font-size: 160px;
+    text-align: center;
+}
+
+.timer.big .time {
+    font-size: 200px;
+}
+
+.time[data-state='Initializing'] {
+    color: red;
+}
+
+.time[data-state='ReadyToStart'] {
+    color: green;
+}
+
+.table {
+    width: 250px;
+    height: 500px;
+    overflow: scroll;
+
+    margin: 60px auto;
+    padding: 0 20px;
+
+    border-right: 1px solid #ccc;
+}
